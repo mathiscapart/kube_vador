@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pma
+spec:
+  selector:
+    component: pma
+  type: ClusterIP
+  ports:
+    - name: pma
+      port: 8000
+      targetPort: 80
+      protocol: TCP

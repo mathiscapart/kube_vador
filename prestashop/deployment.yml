@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prestashop
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prestashop
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prestashop
+    spec:
+      containers:
+        - image: prestashop:8.4
+          name: prestashop
+          env:
+            - name: DB_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: prestashop
+                  key: PRESTASHOP_DB_HOST
+            - name: DB_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb
+                  key: MYSQL_ROOT_PASSWORD
+            - name: DB_USER
+              value: root
+            - name: PS_DOMAIN
+              value: vador-fans.lan
+          volumeMounts:
+            - name: prestashop-pv
+              mountPath: /var/www/html
+      volumes:
+        - name: prestashop-pv
+          persistentVolumeClaim:
+            claimName: ps-pv-claim

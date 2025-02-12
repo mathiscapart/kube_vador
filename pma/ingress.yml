@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pma
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "pma.lan"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: pma
+                port:
+                  number: 8000

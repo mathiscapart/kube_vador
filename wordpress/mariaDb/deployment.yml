@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-wordpress
+  labels:
+    app: wordpress
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: mariadb-wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        tier: mariadb-wordpress
+    spec:
+      containers:
+      - name: mariadb-wordpress
+        image: mariadb:10.7.8
+        envFrom:
+          - secretRef:
+              name: mariadb
+        volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: mariadb-pv
+      volumes:
+        - name: mariadb-pv
+          persistentVolumeClaim:
+            claimName: mariadb-pvc-wordpress
+  strategy:
+    type: Recreate

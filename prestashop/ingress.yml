@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prestashop
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "vador-fans.lan"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/eshop/"
+            backend:
+              service:
+                name: prestashop
+                port:
+                  number: 80

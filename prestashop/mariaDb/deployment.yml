@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-prestashop
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mariadb-prestashop
+  template:
+    metadata:
+      labels:
+        name: mariadb-prestashop
+    spec:
+      containers:
+      - name: mariadb-prestashop
+        image: mariadb:10.7.8
+        envFrom:
+          - secretRef:
+              name: mariadb-presta
+        volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: mariadb-pv
+      volumes:
+        - name: mariadb-pv
+          persistentVolumeClaim:
+            claimName: mariadb-pvc-prestashop
+  strategy:
+    type: Recreate

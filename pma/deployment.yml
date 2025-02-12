@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pma-deployment
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: pma
+  template:
+    metadata:
+      labels:
+        component: pma
+    spec:
+      containers:
+      - name: pma
+        image: phpmyadmin:5.2.1-apache
+        env:
+          - name: PMA_HOSTS
+            value: mariadb-wordpress.wordpress.svc.cluster.local, mariadb-prestashop.prestashop.svc.cluster.local
+        envFrom:
+          - secretRef:
+              name: pma
