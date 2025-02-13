@@ -12,7 +12,7 @@ spec:
     - host: "vador-fans.lan"
       http:
         paths:
-          - pathType: Prefix
+          - pathType: ImplementationSpecific
             path: "/wp-admin"
             backend:
               service:

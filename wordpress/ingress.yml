@@ -8,7 +8,7 @@ spec:
     - host: "vador-fans.lan"
       http:
         paths:
-          - pathType: Exact
+          - pathType: Prefix
             path: "/"
             backend:
               service:

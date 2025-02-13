@@ -9,14 +9,14 @@ spec:
     matchLabels:
       app: prestashop
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: prestashop
     spec:
       containers:
-        - image: prestashop:8.4
+        - image: prestashop/prestashop:8
           name: prestashop
           env:
             - name: DB_SERVER
@@ -27,12 +27,27 @@ spec:
             - name: DB_PASSWD
               valueFrom:
                 secretKeyRef:
-                  name: mariadb
-                  key: MYSQL_ROOT_PASSWORD
+                  name: mariadb-presta
+                  key: MYSQL_PASSWORD
             - name: DB_USER
-              value: root
-            - name: PS_DOMAIN
-              value: vador-fans.lan
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-presta
+                  key: MYSQL_USER
+            - name: PS_CACHING_SYSTEM
+              value: "CacheRedis"
+            - name: PS_CACHE_ENABLED
+              value: "1"
+            - name: PS_CACHE_REDIS_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: prestashop
+                  key: PS_REDIS_HOST
+            - name: PS_CACHE_REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: prestashop
+                  key: PS_REDIS_PORT
           volumeMounts:
             - name: prestashop-pv
               mountPath: /var/www/html
