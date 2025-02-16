@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prestashop
-
+  namespace: prestashop
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: prestashop
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
